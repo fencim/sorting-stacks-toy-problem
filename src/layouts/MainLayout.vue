@@ -10,18 +10,18 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-
         <q-toolbar-title>
-          Quasar App
+          Sorting Stacks
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <div>
+          <q-btn icon="undo" @click="undo(1)"></q-btn>
+          <q-btn icon="360" @click="reset"></q-btn>
+        </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
       content-class="bg-grey-1"
     >
@@ -48,59 +48,28 @@
 
 <script lang="ts">
 import EssentialLink from 'components/EssentialLink.vue'
-
+import { mapActions } from 'vuex';
 const linksData = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
+   {
     title: 'Github',
     caption: 'github.com/quasarframework',
     icon: 'code',
     link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
   }
 ];
 
 import { Vue, Component } from 'vue-property-decorator';
 
 @Component({
-  components: { EssentialLink }
+  components: { EssentialLink },
+  methods: {
+    ...mapActions('sortingStack', ['undo', 'reset'])
+  }
 })
 export default class MainLayout extends Vue {
   leftDrawerOpen = false;
   essentialLinks = linksData;
+  undo!:(undo:number) => void;
+  reset!:() => void;
 }
 </script>

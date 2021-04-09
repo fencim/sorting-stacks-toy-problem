@@ -1,47 +1,116 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page>
+    <div class="row inline items-centered stack-wrapper">
+      <div class="stack-col column" @click="toggle(Number(sindex))" :key="sindex" v-for="(stack, sindex) in stacks">
+         <q-list class="active-item self-start">
+          <q-item>
+            <q-btn v-show="Number(sindex) == activeStack" :class="'item-'+activeItem"  ></q-btn>
+          </q-item>
+        </q-list>
+        <q-list class="stack self-end" :class="{
+          'stack-solved': stack.solved,
+          'stack-active': activeStack == Number(sindex)
+        }" >
+          <q-item :key="index" v-for="(item, index) in stack.items">
+            <q-btn :class="'item-'+item" ></q-btn>
+          </q-item>
+          <q-item ><q-btn icon="upcoming" /></q-item>
+        </q-list>       
+      </div>
+     
+    </div>
+    <q-btn class="newGameBtn" @click="newGame">New Game</q-btn>
+    <div v-if="gameSolved" class="text-h3 text-center"> Game Solved</div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ClassComponent.vue';
+import { SortingStack } from 'src/store/sorting-stacks/state';
 import { Vue, Component } from 'vue-property-decorator';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 @Component({
-  components: { ExampleComponent }
+    computed: {
+      ...mapState('sortingStack', ['stacks', 'activeItem', 'activeStack']),
+      ...mapGetters('sortingStack', ['gameSolved'])
+    },
+    methods:{
+      ...mapActions('sortingStack', ['toggle', 'newGame'])
+    }
 })
 export default class PageIndex extends Vue {
-  todos: Todo[] = [
-    {
-      id: 1,
-      content: 'ct1'
-    },
-    {
-      id: 2,
-      content: 'ct2'
-    },
-    {
-      id: 3,
-      content: 'ct3'
-    },
-    {
-      id: 4,
-      content: 'ct4'
-    },
-    {
-      id: 5,
-      content: 'ct5'
-    }
-  ];
-  meta: Meta = {
-    totalCount: 1200
-  };
+  //states
+  stacks!: SortingStack;
+  activeStack!: number;
+  activeItem!: number;
+  gameSolved!: boolean;
+  //methods
+  toggle!:(stack: number)=> void;
+  newGame!:(colorCount: number)=> void;
+  
 };
 </script>
+
+<style scoped>
+
+.stack-col {
+  border-radius: 5px;
+  border-bottom: 3px solid black;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  height: 355px;
+  margin-top: 10px;
+}
+.active-item {
+  height: 55px;
+  border-bottom: 1px solid black;
+  width: 100%;
+}
+.stack {
+  bottom: 5px;
+  padding: 0;
+}
+.stack-active {
+  background: lightblue;
+}
+.stack-solved {
+  background: gold;
+}
+.stack-wrapper button {
+  width: 40px;
+  vertical-align: bottom;
+}
+.newGameBtn {
+  width: 100%;
+}
+.item-1 {
+  background: blue;
+}
+.item-2 {
+  background: red;
+}
+.item-3 {
+  background: yellow;
+}
+.item-4 {
+  background: green;
+}
+.item-5 {
+  background: white;
+}
+.item-6 {
+  background: gray;
+}
+.item-7 {
+  background: violet;
+}
+.item-8 {
+  background: pink;
+}
+.item-9 {
+  background: orange;
+}
+.item-10 {
+  background: black;
+}
+</style>
