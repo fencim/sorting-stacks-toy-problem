@@ -55,7 +55,7 @@ const linksData = [
     caption: 'Source Code Base: Sorting Stacks',
     icon: 'code',
     link: 'https://github.com/fencim/sorting-stacks-toy-problem'
-  }f
+  }
 ];
 
 import { Vue, Component } from 'vue-property-decorator';
