@@ -117,9 +117,9 @@ module.exports = configure(function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Quasar App',
-        short_name: 'Quasar App',
-        description: 'A Quasar Framework app',
+        name: 'Sorting Stacks',
+        short_name: 'SortStacks',
+        description: 'Toy Problem Architecture Project',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

@@ -52,9 +52,9 @@ import { mapActions, mapGetters } from 'vuex';
 const linksData = [
    {
     title: 'Github',
-    caption: 'github.com/quasarframework',
+    caption: 'Source Code Base: Sorting Stacks',
     icon: 'code',
-    link: 'https://github.com/quasarframework'
+    link: 'https://github.com/fencim/sorting-stacks-toy-problem'
   }
 ];
 
