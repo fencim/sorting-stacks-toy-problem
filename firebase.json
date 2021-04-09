@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "sorting-stacks-toy",
+    "public": "dist/pwa",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
