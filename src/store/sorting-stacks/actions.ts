@@ -4,6 +4,7 @@ import { SortingStack } from './state';
 
 const actions: ActionTree<SortingStack, StateInterface> = {
   toggle(context, targetStack: number) {
+    if (context.state.busy) return;
     if (typeof context.state.activeStack == 'undefined') {
       context.commit('popOnStack', targetStack);
     } else {
@@ -33,14 +34,20 @@ const actions: ActionTree<SortingStack, StateInterface> = {
       await context.dispatch('undo');
       if (lastHistory > context.state.history.length) {
         lastHistory = context.state.history.length;
+        //delay next in 500 for animation
+        await new Promise((r) => { setTimeout(r, 500)});
       } else {
         break;
       }
     }
   },
-  newGame(context) {
-    const colorCount = 10;
-    context.commit('newGame', colorCount);
+  newGame(context, level?:number) {
+    if (context.state.busy) return;
+    let difficulty = typeof level == 'number'? level : context.state.level;
+    if (typeof level != 'number' && context.state.gameSolved) {
+      difficulty++;
+    } 
+    context.commit('newGame', difficulty);
   }
 };
 

@@ -2,8 +2,9 @@ import { MutationTree } from 'vuex';
 import { SortingStack } from './state';
 
 const mutation: MutationTree<SortingStack> = {
-  newGame ( state: SortingStack, paload: number ) {
-    const colorCount = paload;
+  newGame ( state: SortingStack, difficulty: number ) {
+    const colorCount = Math.floor(difficulty / 2);
+    const randomizeColor = !!(difficulty % 2);
     //allocate stacks
     const stackCount = colorCount + 2;
     //clear previous
@@ -11,16 +12,19 @@ const mutation: MutationTree<SortingStack> = {
     while(state.stacks.length < stackCount) {
       state.stacks.push({items:[]});
     }
+    //reset states
     state.activeItem = undefined;
     state.activeStack = undefined;
     state.gameSolved = false;
     state.history.splice(0, state.history.length);
-    const colors = [];
+    state.level = difficulty;
+    //construct new game
+    const colors:number[] = [];
     for (let color = 1; color <= colorCount; color++) {
       colors.push(color);
     }
     for (let colorCounter = 0; colorCounter < colorCount; colorCounter++) {
-      const color = colors.splice(Math.round(Math.random() * (colors.length - 1)), 1)[0];
+      const color = randomizeColor ? colors.splice(Math.round(Math.random() * (colors.length - 1)), 1)[0]: colors[colorCounter];
       for (let item = 0; item < state.stackCapacity; item++) {
         let targetStackIndex = 0;
         do {
@@ -80,6 +84,9 @@ const mutation: MutationTree<SortingStack> = {
       gameSolved = gameSolved && (stack.solved || stack.items.length == 0);
     });
     state.gameSolved = gameSolved;
+  },
+  setBusy(state, payload:boolean) {
+    state.busy = payload;
   }
 };
 

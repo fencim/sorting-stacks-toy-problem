@@ -11,7 +11,7 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
         <q-toolbar-title>
-          Sorting Stacks
+          Sorting Stacks : Level {{difficultyLevel - 3}}
         </q-toolbar-title>
         <div>
           <q-btn icon="undo" @click="undo(1)"></q-btn>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import EssentialLink from 'components/EssentialLink.vue'
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 const linksData = [
    {
     title: 'Github',
@@ -62,6 +62,9 @@ import { Vue, Component } from 'vue-property-decorator';
 
 @Component({
   components: { EssentialLink },
+  computed: {
+    ...mapGetters('sortingStack', ['difficultyLevel'])
+  },
   methods: {
     ...mapActions('sortingStack', ['undo', 'reset'])
   }
@@ -69,6 +72,7 @@ import { Vue, Component } from 'vue-property-decorator';
 export default class MainLayout extends Vue {
   leftDrawerOpen = false;
   essentialLinks = linksData;
+  difficultyLevel!:number;
   undo!:(undo:number) => void;
   reset!:() => void;
 }

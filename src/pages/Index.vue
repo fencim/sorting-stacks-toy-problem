@@ -32,7 +32,7 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 @Component({
     computed: {
       ...mapState('sortingStack', ['stacks', 'activeItem', 'activeStack']),
-      ...mapGetters('sortingStack', ['gameSolved'])
+      ...mapGetters('sortingStack', ['gameSolved','difficultyLevel'])
     },
     methods:{
       ...mapActions('sortingStack', ['toggle', 'newGame'])
@@ -44,9 +44,10 @@ export default class PageIndex extends Vue {
   activeStack!: number;
   activeItem!: number;
   gameSolved!: boolean;
+  difficultyLevel!:number;
   //methods
   toggle!:(stack: number)=> void;
-  newGame!:(colorCount: number)=> void;
+  newGame!:(difficultyLevel: number)=> void;
   
 };
 </script>

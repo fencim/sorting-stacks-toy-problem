@@ -9,6 +9,8 @@ export interface SortingStack {
   stackCapacity: number;
   activeStack?: number;
   history:{action:'push' | 'pop', stack:number}[]
+  busy: boolean;
+  level: number;
 }
 const defaultStackCapacity = 4;
 function state(): SortingStack {
@@ -17,7 +19,9 @@ function state(): SortingStack {
     activeItem: undefined,
     activeStack: undefined,
     gameSolved: false,
+    busy: false,
     history:[],
+    level: 4,
     stackCapacity: defaultStackCapacity
   }
 };
