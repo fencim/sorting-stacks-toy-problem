@@ -34,8 +34,8 @@ const actions: ActionTree<SortingStack, StateInterface> = {
       await context.dispatch('undo');
       if (lastHistory > context.state.history.length) {
         lastHistory = context.state.history.length;
-        //delay next in 500 for animation
-        await new Promise((r) => { setTimeout(r, 500)});
+        //delay next in 100 for animation
+        await new Promise((r) => { setTimeout(r, 100)});
       } else {
         break;
       }

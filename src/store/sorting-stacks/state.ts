@@ -21,7 +21,7 @@ function state(): SortingStack {
     gameSolved: false,
     busy: false,
     history:[],
-    level: 4,
+    level: Number(localStorage.getItem('level')) || 4,
     stackCapacity: defaultStackCapacity
   }
 };

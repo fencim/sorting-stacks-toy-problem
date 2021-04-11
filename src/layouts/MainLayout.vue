@@ -11,9 +11,24 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
         <q-toolbar-title>
-          Sorting Stacks : Level {{difficultyLevel - 3}}
+          Sorting Stacks 
         </q-toolbar-title>
         <div>
+           <q-btn-dropdown
+              split
+              color="teal"
+              rounded
+              :label="'L ' + (difficultyLevel - 3) "
+            >
+              <q-list>
+                <q-item clickable v-close-popup :key="level" v-for="level in 
+                  [1, 2, 3, 4, 5, 6, 7, 8 ,9, 10, 11, 12, 13, 14, 15, 16, 17, 18]">
+                  <q-item-section @click="newGame(level + 3)">
+                    <q-item-label>L {{level}}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
           <q-btn icon="undo" @click="undo(1)"></q-btn>
           <q-btn icon="360" @click="reset"></q-btn>
         </div>
@@ -66,7 +81,7 @@ import { Vue, Component } from 'vue-property-decorator';
     ...mapGetters('sortingStack', ['difficultyLevel'])
   },
   methods: {
-    ...mapActions('sortingStack', ['undo', 'reset'])
+    ...mapActions('sortingStack', ['undo', 'reset', 'newGame'])
   }
 })
 export default class MainLayout extends Vue {
@@ -75,5 +90,6 @@ export default class MainLayout extends Vue {
   difficultyLevel!:number;
   undo!:(undo:number) => void;
   reset!:() => void;
+  newGame!:(difficultyLevel: number)=> void;
 }
 </script>

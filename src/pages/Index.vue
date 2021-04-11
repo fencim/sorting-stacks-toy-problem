@@ -59,11 +59,11 @@ export default class PageIndex extends Vue {
   border-bottom: 3px solid black;
   border-right: 1px solid black;
   border-left: 1px solid black;
-  height: 355px;
+  height: 300px;
   margin-top: 10px;
 }
 .active-item {
-  height: 55px;
+  height: 45px;
   border-bottom: 1px solid black;
   width: 100%;
 }
@@ -78,7 +78,8 @@ export default class PageIndex extends Vue {
   background: gold;
 }
 .stack-wrapper button {
-  width: 40px;
+  width: 30px;
+  height: 30px;
   vertical-align: bottom;
 }
 .newGameBtn {

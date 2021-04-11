@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex';
-import { SortingStack } from './state';
+import { SortingStack, Stack } from './state';
 
 const mutation: MutationTree<SortingStack> = {
   newGame ( state: SortingStack, difficulty: number ) {
@@ -18,22 +18,30 @@ const mutation: MutationTree<SortingStack> = {
     state.gameSolved = false;
     state.history.splice(0, state.history.length);
     state.level = difficulty;
+    localStorage.setItem('level', String(difficulty));
     //construct new game
     const colors:number[] = [];
-    for (let color = 1; color <= colorCount; color++) {
-      colors.push(color);
+    //items
+    for (let item = 0; item < state.stackCapacity; item++) {
+      for (let color = 1; color <= colorCount; color++) {
+        colors.push(color);
+      }
     }
+
     for (let colorCounter = 0; colorCounter < colorCount; colorCounter++) {
-      const color = randomizeColor ? colors.splice(Math.round(Math.random() * (colors.length - 1)), 1)[0]: colors[colorCounter];
       for (let item = 0; item < state.stackCapacity; item++) {
+        //random order
+        const color = colors.splice(randomizeColor ? Math.round(Math.random() * colors.length - 1): 0, 1)[0];
+        let stack:Stack;
         let targetStackIndex = 0;
         do {
-          targetStackIndex = Math.round(Math.random() * (stackCount - 3));
-        } while (state.stacks[targetStackIndex].items.length >= state.stackCapacity);
-        const stack = state.stacks[targetStackIndex];        
+          stack = state.stacks[targetStackIndex];
+          targetStackIndex = (targetStackIndex + 1) % (stackCount - 2);
+        } while ( (stack.items.length >= state.stackCapacity));
         stack.items.push(color);
       }
     }
+    
   },
   popOnStack(state: SortingStack,  payload: number) {
     const targetStackIndex = payload >= 0 ? payload : ((-1 * payload)  -1);
