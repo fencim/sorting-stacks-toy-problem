@@ -2,7 +2,18 @@ export interface Stack {
   items: number[]
   solved?: boolean
 }
+
+export interface Player {
+  id: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  nickName: string;
+  age: number;
+  gender: 'male' | 'female';
+}
 export interface SortingStack {
+  players: Player[];
   stacks: Stack[];
   activeItem?: number ;
   gameSolved?: boolean;
@@ -15,6 +26,7 @@ export interface SortingStack {
 const defaultStackCapacity = 4;
 function state(): SortingStack {
   return {
+    players: [],
     stacks: [],
     activeItem: undefined,
     activeStack: undefined,

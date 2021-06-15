@@ -1,7 +1,6 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { SortingStack } from './state';
-
 const actions: ActionTree<SortingStack, StateInterface> = {
   toggle(context, targetStack: number) {
     if (context.state.busy) return;
@@ -41,13 +40,20 @@ const actions: ActionTree<SortingStack, StateInterface> = {
       }
     }
   },
-  newGame(context, level?:number) {
+  async newGame(context, level?:number) {
     if (context.state.busy) return;
     let difficulty = typeof level == 'number'? level : context.state.level;
     if (typeof level != 'number' && context.state.gameSolved) {
       difficulty++;
     } 
     context.commit('newGame', difficulty);
+    // console.log(context.state.level, context.state.stacks);
+    // const stacks = context.state.stacks;
+    
+  },
+
+  async bootstrap(context) {
+    throw "not implemented";
   }
 };
 

@@ -31,6 +31,13 @@
             </q-btn-dropdown>
           <q-btn icon="undo" @click="undo(1)"></q-btn>
           <q-btn icon="360" @click="reset"></q-btn>
+          <q-btn
+            flat
+            round
+            to="register"
+            icon="person"
+            text-color="white"
+        ></q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -91,5 +98,8 @@ export default class MainLayout extends Vue {
   undo!:(undo:number) => void;
   reset!:() => void;
   newGame!:(difficultyLevel: number)=> void;
+  created() {
+    this.$store.dispatch('bootstrap');
+  }
 }
 </script>

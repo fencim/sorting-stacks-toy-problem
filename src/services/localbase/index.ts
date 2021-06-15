@@ -1,0 +1,1 @@
+export { KeyValueStorage as LocalBase } from './key-value.storage';
