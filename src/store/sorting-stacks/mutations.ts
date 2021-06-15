@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex';
-import { SortingStack, Stack } from './state';
+import { Player, SortingStack, Stack } from './state';
 
 const mutation: MutationTree<SortingStack> = {
   newGame ( state: SortingStack, difficulty: number ) {
@@ -40,8 +40,14 @@ const mutation: MutationTree<SortingStack> = {
         } while ( (stack.items.length >= state.stackCapacity));
         stack.items.push(color);
       }
-    }
-    
+    }    
+  },
+  loadGame(state: SortingStack, payload: {level: number, stacks: number[][], players:Player[]}) {
+    state.gameSolved = false;
+    state.level = payload.level;
+    state.history = [];
+    state.stacks = payload.stacks.map(s => ({items: s, solved : false}));
+    state.players = payload.players;
   },
   popOnStack(state: SortingStack,  payload: number) {
     const targetStackIndex = payload >= 0 ? payload : ((-1 * payload)  -1);

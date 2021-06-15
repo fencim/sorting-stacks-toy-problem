@@ -40,7 +40,7 @@ const actions: ActionTree<SortingStack, StateInterface> = {
       }
     }
   },
-  async newGame(context, level?:number) {
+  newGame(context, level?:number) {
     if (context.state.busy) return;
     let difficulty = typeof level == 'number'? level : context.state.level;
     if (typeof level != 'number' && context.state.gameSolved) {
@@ -52,8 +52,12 @@ const actions: ActionTree<SortingStack, StateInterface> = {
     
   },
 
-  async bootstrap(context) {
-    throw "not implemented";
+  bootstrap(context) {
+    console.log('bootstrap');
+    context.commit('loadGame', {
+      level: 0,
+      stacks: [[]]
+    })
   }
 };
 

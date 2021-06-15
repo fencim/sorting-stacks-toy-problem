@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" >
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -13,6 +13,7 @@
         <q-toolbar-title>
           Sorting Stacks 
         </q-toolbar-title>
+        
         <div>
            <q-btn-dropdown
               split
@@ -32,12 +33,17 @@
           <q-btn icon="undo" @click="undo(1)"></q-btn>
           <q-btn icon="360" @click="reset"></q-btn>
           <q-btn
-            flat
+            
             round
             to="register"
-            icon="person"
+            :icon="!(currentProfile && currentProfile.id)? 'person' : ''"
             text-color="white"
-        ></q-btn>
+            :label="getProfileInitials()"
+          >
+          <q-badge v-if="!(currentProfile && currentProfile.id)"  floating >
+              !
+            </q-badge>
+        </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -52,7 +58,7 @@
           header
           class="text-grey-8"
         >
-          Essential Links
+          Leader Board
         </q-item-label>
         <EssentialLink
           v-for="link in essentialLinks"
@@ -70,7 +76,10 @@
 
 <script lang="ts">
 import EssentialLink from 'components/EssentialLink.vue'
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
+
+import { Vue, Component } from 'vue-property-decorator';
+import { Profile } from 'src/store/profiles/state';
 const linksData = [
    {
     title: 'Github',
@@ -80,26 +89,39 @@ const linksData = [
   }
 ];
 
-import { Vue, Component } from 'vue-property-decorator';
-
 @Component({
   components: { EssentialLink },
   computed: {
-    ...mapGetters('sortingStack', ['difficultyLevel'])
+    ...mapGetters('sortingStack', ['difficultyLevel']),
+    ...mapState('profiles', ['currentProfile'])
   },
   methods: {
-    ...mapActions('sortingStack', ['undo', 'reset', 'newGame'])
+    ...mapActions('sortingStack', ['undo', 'reset', 'newGame']),
+    ...mapActions('profiles', {
+      bootstrapProfiles: 'bootstrap'
+    })
   }
 })
 export default class MainLayout extends Vue {
   leftDrawerOpen = false;
   essentialLinks = linksData;
   difficultyLevel!:number;
+  currentProfile!: Profile;
   undo!:(undo:number) => void;
+  bootstrapProfiles!:() => Promise<void>;
   reset!:() => void;
   newGame!:(difficultyLevel: number)=> void;
-  created() {
-    this.$store.dispatch('bootstrap');
+  async created() {
+    await this.bootstrapProfiles();
   }
+  getProfileInitials() {
+    if (this.currentProfile && this.currentProfile.id) {
+      const firstName = this.currentProfile.firstName || '#';
+      const lastName = this.currentProfile.lastName || '#';
+      return (firstName[0] + lastName[0]).toUpperCase(); 
+    } 
+    return '';
+  }
+
 }
 </script>

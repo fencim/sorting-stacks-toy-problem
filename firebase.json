@@ -1,11 +1,11 @@
 {
   "functions": {
-    "predeploy": "npm --prefix \"$RESOURCE_DIR\" run build",
+    "predeploy": "npm  run build",
     "source": "functions/"
   },
   "hosting": {
     "site": "sorting-stacks-toy",
-    "public": "dist/pwa",
+    "public": "dist/spa",
     "ignore": [
       "firebase.json",
       "**/.*",

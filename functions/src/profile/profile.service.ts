@@ -32,4 +32,16 @@ export class ProfileService {
         }
         throw "Record does not exist";
     }
+
+    async update(id: string, profile: ProfileDto) : Promise<ProfileDto> {
+        const doc = this.firestore.profiles().doc(id);
+    
+        const record = await doc.get();
+        if (record.exists) {
+            const data = record.data();
+            await doc.set(profile);
+            return data as ProfileDto;
+        }
+        throw "Record does not exist";
+    }
 }

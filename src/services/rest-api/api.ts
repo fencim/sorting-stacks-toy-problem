@@ -42,10 +42,10 @@ export interface CreatePlayerDto {
 export interface GameDto {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof GameDto
      */
-    id: number;
+    id: string;
     /**
      * 
      * @type {number}
@@ -92,10 +92,10 @@ export interface NewGameDto {
 export interface PlayerDto {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof PlayerDto
      */
-    id: number;
+    id: string;
     /**
      * 
      * @type {string}
@@ -120,6 +120,86 @@ export interface PlayerDto {
      * @memberof PlayerDto
      */
     dateSolved?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ProfileDto
+ */
+export interface ProfileDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileDto
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileDto
+     */
+    firstName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileDto
+     */
+    lastName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileDto
+     */
+    nickName: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProfileDto
+     */
+    age: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProfileDto
+     */
+    gender: string;
+}
+/**
+ * 
+ * @export
+ * @interface RegisterProfileDto
+ */
+export interface RegisterProfileDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterProfileDto
+     */
+    firstName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterProfileDto
+     */
+    lastName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterProfileDto
+     */
+    nickName: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RegisterProfileDto
+     */
+    age: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegisterProfileDto
+     */
+    gender: string;
 }
 
 /**
@@ -160,12 +240,46 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary Leader Board (top 100)
-         * @param {number} gameId 
+         * @summary Delete profile with id {id}
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        gameLeaderBoard: async (gameId: number, options: any = {}): Promise<RequestArgs> => {
+        deleteProfile: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteProfile', 'id', id)
+            const localVarPath = `/profile/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Leader Board (top 100)
+         * @param {string} gameId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        gameLeaderBoard: async (gameId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameId' is not null or undefined
             assertParamExists('gameLeaderBoard', 'gameId', gameId)
             const localVarPath = `/game/{gameId}/player`
@@ -195,11 +309,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Get information of game with id {id}
-         * @param {number} id 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGame: async (id: number, options: any = {}): Promise<RequestArgs> => {
+        getGame: async (id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getGame', 'id', id)
             const localVarPath = `/game/{id}`
@@ -229,11 +343,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Get all stacks in specified game
-         * @param {number} gameid 
+         * @param {string} gameid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGameStacks: async (gameid: number, options: any = {}): Promise<RequestArgs> => {
+        getGameStacks: async (gameid: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameid' is not null or undefined
             assertParamExists('getGameStacks', 'gameid', gameid)
             const localVarPath = `/game/{gameid}/stack`
@@ -263,12 +377,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Get status of Player
-         * @param {number} gameId 
-         * @param {number} id 
+         * @param {string} gameId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPlayerStatus: async (gameId: number, id: number, options: any = {}): Promise<RequestArgs> => {
+        getPlayerStatus: async (gameId: string, id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameId' is not null or undefined
             assertParamExists('getPlayerStatus', 'gameId', gameId)
             // verify required parameter 'id' is not null or undefined
@@ -300,13 +414,47 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Get information of profile with id {id}
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProfile: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getProfile', 'id', id)
+            const localVarPath = `/profile/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Join Game
-         * @param {number} gameId 
+         * @param {string} gameId 
          * @param {CreatePlayerDto} createPlayerDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        joinGame: async (gameId: number, createPlayerDto: CreatePlayerDto, options: any = {}): Promise<RequestArgs> => {
+        joinGame: async (gameId: string, createPlayerDto: CreatePlayerDto, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameId' is not null or undefined
             assertParamExists('joinGame', 'gameId', gameId)
             // verify required parameter 'createPlayerDto' is not null or undefined
@@ -341,12 +489,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary leave the game
-         * @param {number} gameId 
-         * @param {number} id 
+         * @param {string} gameId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        leaveGame: async (gameId: number, id: number, options: any = {}): Promise<RequestArgs> => {
+        leaveGame: async (gameId: string, id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameId' is not null or undefined
             assertParamExists('leaveGame', 'gameId', gameId)
             // verify required parameter 'id' is not null or undefined
@@ -444,13 +592,49 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Register new Profile
+         * @param {RegisterProfileDto} registerProfileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        register: async (registerProfileDto: RegisterProfileDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'registerProfileDto' is not null or undefined
+            assertParamExists('register', 'registerProfileDto', registerProfileDto)
+            const localVarPath = `/profile`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(registerProfileDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary update status of player
-         * @param {number} gameId 
+         * @param {string} gameId 
          * @param {PlayerDto} playerDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePlayer: async (gameId: number, playerDto: PlayerDto, options: any = {}): Promise<RequestArgs> => {
+        updatePlayer: async (gameId: string, playerDto: PlayerDto, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameId' is not null or undefined
             assertParamExists('updatePlayer', 'gameId', gameId)
             // verify required parameter 'playerDto' is not null or undefined
@@ -482,6 +666,46 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary update profile
+         * @param {string} id 
+         * @param {ProfileDto} profileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProfile: async (id: string, profileDto: ProfileDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateProfile', 'id', id)
+            // verify required parameter 'profileDto' is not null or undefined
+            assertParamExists('updateProfile', 'profileDto', profileDto)
+            const localVarPath = `/profile`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(profileDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -504,70 +728,92 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Leader Board (top 100)
-         * @param {number} gameId 
+         * @summary Delete profile with id {id}
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async gameLeaderBoard(gameId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async deleteProfile(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProfileDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProfile(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Leader Board (top 100)
+         * @param {string} gameId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async gameLeaderBoard(gameId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.gameLeaderBoard(gameId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Get information of game with id {id}
-         * @param {number} id 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGame(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GameDto>> {
+        async getGame(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GameDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getGame(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Get all stacks in specified game
-         * @param {number} gameid 
+         * @param {string} gameid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGameStacks(gameid: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Array<number>>>> {
+        async getGameStacks(gameid: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Array<number>>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getGameStacks(gameid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Get status of Player
-         * @param {number} gameId 
-         * @param {number} id 
+         * @param {string} gameId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPlayerStatus(gameId: number, id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async getPlayerStatus(gameId: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPlayerStatus(gameId, id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
+         * @summary Get information of profile with id {id}
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getProfile(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProfileDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getProfile(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Join Game
-         * @param {number} gameId 
+         * @param {string} gameId 
          * @param {CreatePlayerDto} createPlayerDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async joinGame(gameId: number, createPlayerDto: CreatePlayerDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async joinGame(gameId: string, createPlayerDto: CreatePlayerDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.joinGame(gameId, createPlayerDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary leave the game
-         * @param {number} gameId 
-         * @param {number} id 
+         * @param {string} gameId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async leaveGame(gameId: number, id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async leaveGame(gameId: string, id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.leaveGame(gameId, id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -594,14 +840,37 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Register new Profile
+         * @param {RegisterProfileDto} registerProfileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async register(registerProfileDto: RegisterProfileDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProfileDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.register(registerProfileDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary update status of player
-         * @param {number} gameId 
+         * @param {string} gameId 
          * @param {PlayerDto} playerDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePlayer(gameId: number, playerDto: PlayerDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async updatePlayer(gameId: string, playerDto: PlayerDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePlayer(gameId, playerDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary update profile
+         * @param {string} id 
+         * @param {ProfileDto} profileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateProfile(id: string, profileDto: ProfileDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateProfile(id, profileDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -625,65 +894,85 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary Leader Board (top 100)
-         * @param {number} gameId 
+         * @summary Delete profile with id {id}
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        gameLeaderBoard(gameId: number, options?: any): AxiosPromise<void> {
+        deleteProfile(id: string, options?: any): AxiosPromise<ProfileDto> {
+            return localVarFp.deleteProfile(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Leader Board (top 100)
+         * @param {string} gameId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        gameLeaderBoard(gameId: string, options?: any): AxiosPromise<void> {
             return localVarFp.gameLeaderBoard(gameId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get information of game with id {id}
-         * @param {number} id 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGame(id: number, options?: any): AxiosPromise<GameDto> {
+        getGame(id: string, options?: any): AxiosPromise<GameDto> {
             return localVarFp.getGame(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get all stacks in specified game
-         * @param {number} gameid 
+         * @param {string} gameid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGameStacks(gameid: number, options?: any): AxiosPromise<Array<Array<number>>> {
+        getGameStacks(gameid: string, options?: any): AxiosPromise<Array<Array<number>>> {
             return localVarFp.getGameStacks(gameid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get status of Player
-         * @param {number} gameId 
-         * @param {number} id 
+         * @param {string} gameId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPlayerStatus(gameId: number, id: number, options?: any): AxiosPromise<void> {
+        getPlayerStatus(gameId: string, id: string, options?: any): AxiosPromise<void> {
             return localVarFp.getPlayerStatus(gameId, id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
+         * @summary Get information of profile with id {id}
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProfile(id: string, options?: any): AxiosPromise<ProfileDto> {
+            return localVarFp.getProfile(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Join Game
-         * @param {number} gameId 
+         * @param {string} gameId 
          * @param {CreatePlayerDto} createPlayerDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        joinGame(gameId: number, createPlayerDto: CreatePlayerDto, options?: any): AxiosPromise<void> {
+        joinGame(gameId: string, createPlayerDto: CreatePlayerDto, options?: any): AxiosPromise<void> {
             return localVarFp.joinGame(gameId, createPlayerDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary leave the game
-         * @param {number} gameId 
-         * @param {number} id 
+         * @param {string} gameId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        leaveGame(gameId: number, id: number, options?: any): AxiosPromise<void> {
+        leaveGame(gameId: string, id: string, options?: any): AxiosPromise<void> {
             return localVarFp.leaveGame(gameId, id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -707,14 +996,35 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Register new Profile
+         * @param {RegisterProfileDto} registerProfileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        register(registerProfileDto: RegisterProfileDto, options?: any): AxiosPromise<ProfileDto> {
+            return localVarFp.register(registerProfileDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary update status of player
-         * @param {number} gameId 
+         * @param {string} gameId 
          * @param {PlayerDto} playerDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePlayer(gameId: number, playerDto: PlayerDto, options?: any): AxiosPromise<void> {
+        updatePlayer(gameId: string, playerDto: PlayerDto, options?: any): AxiosPromise<void> {
             return localVarFp.updatePlayer(gameId, playerDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary update profile
+         * @param {string} id 
+         * @param {ProfileDto} profileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProfile(id: string, profileDto: ProfileDto, options?: any): AxiosPromise<void> {
+            return localVarFp.updateProfile(id, profileDto, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -739,76 +1049,100 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
-     * @summary Leader Board (top 100)
-     * @param {number} gameId 
+     * @summary Delete profile with id {id}
+     * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public gameLeaderBoard(gameId: number, options?: any) {
+    public deleteProfile(id: string, options?: any) {
+        return DefaultApiFp(this.configuration).deleteProfile(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Leader Board (top 100)
+     * @param {string} gameId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public gameLeaderBoard(gameId: string, options?: any) {
         return DefaultApiFp(this.configuration).gameLeaderBoard(gameId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get information of game with id {id}
-     * @param {number} id 
+     * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getGame(id: number, options?: any) {
+    public getGame(id: string, options?: any) {
         return DefaultApiFp(this.configuration).getGame(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get all stacks in specified game
-     * @param {number} gameid 
+     * @param {string} gameid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getGameStacks(gameid: number, options?: any) {
+    public getGameStacks(gameid: string, options?: any) {
         return DefaultApiFp(this.configuration).getGameStacks(gameid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Get status of Player
-     * @param {number} gameId 
-     * @param {number} id 
+     * @param {string} gameId 
+     * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getPlayerStatus(gameId: number, id: number, options?: any) {
+    public getPlayerStatus(gameId: string, id: string, options?: any) {
         return DefaultApiFp(this.configuration).getPlayerStatus(gameId, id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
+     * @summary Get information of profile with id {id}
+     * @param {string} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getProfile(id: string, options?: any) {
+        return DefaultApiFp(this.configuration).getProfile(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Join Game
-     * @param {number} gameId 
+     * @param {string} gameId 
      * @param {CreatePlayerDto} createPlayerDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public joinGame(gameId: number, createPlayerDto: CreatePlayerDto, options?: any) {
+    public joinGame(gameId: string, createPlayerDto: CreatePlayerDto, options?: any) {
         return DefaultApiFp(this.configuration).joinGame(gameId, createPlayerDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary leave the game
-     * @param {number} gameId 
-     * @param {number} id 
+     * @param {string} gameId 
+     * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public leaveGame(gameId: number, id: number, options?: any) {
+    public leaveGame(gameId: string, id: string, options?: any) {
         return DefaultApiFp(this.configuration).leaveGame(gameId, id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -837,15 +1171,40 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
+     * @summary Register new Profile
+     * @param {RegisterProfileDto} registerProfileDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public register(registerProfileDto: RegisterProfileDto, options?: any) {
+        return DefaultApiFp(this.configuration).register(registerProfileDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary update status of player
-     * @param {number} gameId 
+     * @param {string} gameId 
      * @param {PlayerDto} playerDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public updatePlayer(gameId: number, playerDto: PlayerDto, options?: any) {
+    public updatePlayer(gameId: string, playerDto: PlayerDto, options?: any) {
         return DefaultApiFp(this.configuration).updatePlayer(gameId, playerDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary update profile
+     * @param {string} id 
+     * @param {ProfileDto} profileDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public updateProfile(id: string, profileDto: ProfileDto, options?: any) {
+        return DefaultApiFp(this.configuration).updateProfile(id, profileDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

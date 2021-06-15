@@ -2,6 +2,8 @@ import { store } from 'quasar/wrappers';
 import Vuex from 'vuex';
 import { SortingStack } from './sorting-stacks/state';
 import sortingStack from './sorting-stacks';
+import { ProfileStates } from './profiles/state';
+import profiles from './profiles';
 
 // import example from './module-example';
 // import { ExampleStateInterface } from './module-example/state';
@@ -16,6 +18,7 @@ export interface StateInterface {
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   sortingStack: SortingStack;
+  profiles: ProfileStates;
 }
 
 export default store(function ({ Vue }) {
@@ -23,7 +26,8 @@ export default store(function ({ Vue }) {
 
   const Store = new Vuex.Store<StateInterface>({
     modules: {
-      sortingStack
+      sortingStack,
+      profiles
       // example
     },
 

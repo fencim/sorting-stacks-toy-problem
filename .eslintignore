@@ -5,4 +5,6 @@
 /.quasar
 /node_modules
 /src-ssr
+/functions
+/src/services/localbase
 .eslintrc.js

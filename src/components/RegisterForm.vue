@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-form
-      @submit=""
+      @submit="submit" 
       :class="!$q.screen.lt.md ? 'q-pa-xl shadow-10' : 'q-pa-lg'"
     >
       <div
@@ -28,7 +28,7 @@
         <div class="col-6">
           <q-input
             outlined
-            v-model="firstName"
+            v-model="profile.firstName"
             label="First name"
             lazy-rules
             stack-label
@@ -41,7 +41,7 @@
         <div class="col-6">
           <q-input
             outlined
-            v-model="lastName"
+            v-model="profile.lastName"
             label="Last name"
             lazy-rules
             stack-label
@@ -54,7 +54,7 @@
         <div class="col-6">
           <q-input
             outlined
-            v-model="middleName"
+            v-model="profile.middleName"
             label="Middle name (Optional)"
             stack-label
           />
@@ -62,7 +62,7 @@
         <div class="col-6">
           <q-input
             outlined
-            v-model="nickName"
+            v-model="profile.nickName"
             label="Nick name"
             stack-label
             :rules="[
@@ -73,7 +73,7 @@
         <div class="col-6">
           <q-input
             outlined
-            v-model="age"
+            v-model="profile.age"
             type="number"
             label="Age"
             stack-label
@@ -91,7 +91,7 @@
           <q-select
             outlined
             stack-label
-            v-model="gender"
+            v-model="profile.gender"
             label="Gender"
             :options="['Male', 'Female']"
             options-dense
@@ -115,20 +115,35 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { mapActions, mapState } from 'vuex';
+import { Vue, Component } from 'vue-property-decorator';
+import { Profile } from 'src/store/profiles/state';
 
-export default {
-  name: 'RegisterForm',
-  data() {
-    return {
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      nickName: '',
-      age: '',
-      gender: '',
-      
-    };
-  } 
+@Component({
+  computed: {
+    ...mapState('profiles', ['currentProfile'])
+  },
+  methods: {
+    ...mapActions('profiles', ['register'])
+  }
+})
+export default class RegisterForm extends Vue {
+  currentProfile!: Profile;
+  register!:(profile:Profile) => Promise<void>;
+  profile: Profile = {};
+  mounted() {
+    this.profile = {...this.currentProfile};
+  }
+  submit() {
+    this.register(this.profile).catch((e:string)=> {
+      this.$q.notify({icon: 'error', message: e});
+    }).finally(()=> {
+      this.$router.push('/').catch((e:string) => {
+        this.$q.notify({icon: 'error', message: e});
+      });
+    });
+    
+  }
 };
 </script>
