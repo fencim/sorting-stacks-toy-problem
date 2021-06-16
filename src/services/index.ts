@@ -1,5 +1,5 @@
 
-import { DefaultApi, Configuration, ProfileDto, GameDto, NewGameDto } from './rest-api';
+import { DefaultApi, Configuration, ProfileDto, GameDto, NewGameDto, StackDto } from './rest-api';
 import { LocalBase } from './localbase';
 const restConfig = new Configuration({
   basePath: 'http://localhost:5001/sorting-stacks-game/asia-northeast1/restapi'
@@ -27,7 +27,7 @@ export const service = {
         } else {
             try {
                 const response = await restApi.register(profile);
-                if (response.status == 200) {
+                if (response.status == 201) {
                     profile = response.data;
                 }
                 
@@ -67,10 +67,10 @@ export const service = {
     async postCurrentGame(game:NewGameDto) {
         let newGame;
         const response = await restApi.newGame(game);
-        if (response.status == 200) {
+        if (response.status == 201) {
             newGame = response.data;
         }
-        await LocalBase.setItem('currentGame', {
+        return await LocalBase.setItem('currentGame', {
             ...game,
             id: newGame?.id
         });
@@ -88,6 +88,14 @@ export const service = {
         throw 'Game Not found';
     },
     async getGames() {
+        const response = await restApi.listGames();
+        if (response.statusText == 'OK') {
+            (response.data).forEach(g => gamesDb.setItem(g.id, g));
+        }
         return (await gamesDb.values()) as GameDto[];
+    },
+    async getStacks(gameId: string) {
+        const response = await restApi.getGameStacks(gameId);
+        return response.data as StackDto[];
     }
 }

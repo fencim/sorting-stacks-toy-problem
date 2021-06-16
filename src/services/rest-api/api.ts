@@ -54,10 +54,10 @@ export interface GameDto {
     level: number;
     /**
      * 
-     * @type {Array<string>}
+     * @type {PlayerDto}
      * @memberof GameDto
      */
-    players: Array<string>;
+    players: PlayerDto;
 }
 /**
  * 
@@ -79,10 +79,10 @@ export interface NewGameDto {
     players: Array<PlayerDto>;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<StackDto>}
      * @memberof NewGameDto
      */
-    stacks: Array<string>;
+    stacks: Array<StackDto>;
 }
 /**
  * 
@@ -201,6 +201,19 @@ export interface RegisterProfileDto {
      */
     gender: string;
 }
+/**
+ * 
+ * @export
+ * @interface StackDto
+ */
+export interface StackDto {
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof StackDto
+     */
+    items: Array<number>;
+}
 
 /**
  * DefaultApi - axios parameter creator
@@ -215,7 +228,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         about: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/about`;
+            const localVarPath = `/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -766,7 +779,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGameStacks(gameid: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Array<number>>>> {
+        async getGameStacks(gameid: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StackDto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getGameStacks(gameid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -823,7 +836,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listGames(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async listGames(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GameDto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listGames(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -929,7 +942,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGameStacks(gameid: string, options?: any): AxiosPromise<Array<Array<number>>> {
+        getGameStacks(gameid: string, options?: any): AxiosPromise<Array<StackDto>> {
             return localVarFp.getGameStacks(gameid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -981,7 +994,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listGames(options?: any): AxiosPromise<void> {
+        listGames(options?: any): AxiosPromise<Array<GameDto>> {
             return localVarFp.listGames(options).then((request) => request(axios, basePath));
         },
         /**

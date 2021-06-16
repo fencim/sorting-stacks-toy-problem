@@ -10,7 +10,7 @@ var appStateTable: ITableInfo = {
 export class KeyValueStorage {
     private appDb: StateDBController;
     constructor(collection:string) {
-        this.appDb = new StateDBController('globalDb', [appStateTable]);
+        this.appDb = new StateDBController(collection, [appStateTable]);
     }
     async getItem(key: string): Promise<any> {
         var transaction, keyVal;
