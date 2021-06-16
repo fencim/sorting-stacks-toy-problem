@@ -1,1 +1,3 @@
-export type Stack = number []
+export interface IStack  {
+    items: number []
+}

@@ -1,19 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { GameDto } from 'src/dto/game.dto';
-import { NewGameDto } from 'src/dto/new-game.dto';
-import { Game } from 'src/interfaces/game.interface';
+import { GameDto } from '../dto/game.dto';
+import { NewGameDto } from '../dto/new-game.dto';
+import { FirestoreService } from '../firestore/firestore.service';
 
 @Injectable()
 export class GameService {
-    private readonly games: GameDto[] = [];
+    constructor(private firestore: FirestoreService){}
 
-    create(game: NewGameDto): GameDto {
-        return game as GameDto;
+    async create(game: NewGameDto): Promise<GameDto> {
+        console.log('newgame', game);
+        const record = await this.firestore.challenges().add(game)
+        return {
+            ...game,
+            id: record.id
+        }
     }
-    findOne(id: string) : GameDto {
-        return this.games.find((g => g.id == id));
+    async update(id: string, game: GameDto): Promise<GameDto> {
+        const doc = this.firestore.challenges().doc(id);
+        const record = await doc.get();
+        if (record.exists) {
+            doc.set(game);
+            return game as GameDto;
+        }
+        throw "Record does not exist";
     }
-    findAll(): Game[] {
-        return this.games;
+    async findOne(id: string) : Promise<GameDto> {
+        const record = await this.firestore.challenges().doc(id).get();
+        if (record.exists) {
+            return record.data() as GameDto;
+        }
+        throw "Record does not exist";
+    }
+    async findAll(): Promise<GameDto[]> {
+        const list = await this.firestore.challenges().limit(20).get();
+        return list.docs.map(doc => doc.data()) as GameDto[];
     }
 }

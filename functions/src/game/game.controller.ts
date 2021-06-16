@@ -17,14 +17,15 @@ export class GameController {
     @ApiOperation({ summary: "Get information of game with id {id}", operationId: "GetGame" })
     @ApiResponse({ status: 200, type: GameDto })
     @Get(':id')
-    findOne(@Param('id') id: string): GameDto {
+    findOne(@Param('id') id: string): Promise<GameDto> {
         return this.gameService.findOne(id);
     }
     
     @ApiOperation({ summary: "Get all running games", operationId: "ListGames"  })
+    @ApiResponse({status: 200, isArray: true, type: GameDto})
     @Get()
-    findAll():GameDto[] {
-        return this.gameService.findAll().map(g => {
+    async findAll():Promise<GameDto[]> {
+        return (await this.gameService.findAll()).map(g => {
             return { ...g, players: undefined, stacks: undefined }
         });
     }

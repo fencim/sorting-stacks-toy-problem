@@ -1,24 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { PlayerDto } from 'src/dto/player-dto';
+import { PlayerDto } from '../../dto/player-dto';
 import { GameService } from '../game.service';
 
 @Injectable()
 export class PlayerService {
     constructor(private readonly gameService: GameService){}
-    update(gameId: string,  player: PlayerDto): PlayerDto | PromiseLike<PlayerDto> {
-        let players = this.gameService.findOne(gameId).players;
+    async update(gameId: string,  player: PlayerDto): Promise<PlayerDto> {
+        const game = (await this.gameService.findOne(gameId));
+        let players = game.players;
         let index = players.findIndex((p) => p.id == player.id);
         if (index >= 0) {
             players.splice(index, 1, player);
+            await this.gameService.update(gameId, game)
             return player;
         }
         throw new Error('Player is not found');
     }
-    findAll(gameId: string): PlayerDto[] | PromiseLike<PlayerDto[]> {
-        return this.gameService.findOne(gameId).players;
+    async findAll(gameId: string): Promise<PlayerDto[]> {
+        return (await this.gameService.findOne(gameId)).players;
     }
-    findOne(gameId: string, id: string): PlayerDto | PromiseLike<PlayerDto> {
-        let players = this.gameService.findOne(gameId).players;
+    async findOne(gameId: string, id: string): Promise<PlayerDto> {
+        let players = (await this.gameService.findOne(gameId)).players;
         if (!players) {
             throw new Error('Game is not found');
         }
@@ -28,28 +30,31 @@ export class PlayerService {
         }
         throw new Error('Player is not found');
     }
-    deleteOne(gameId: string, id: string): PlayerDto[] | PromiseLike<PlayerDto[]> {
-        let players = this.gameService.findOne(gameId).players;
+    async deleteOne(gameId: string, id: string):  Promise<PlayerDto[]> {
+        const game = await this.gameService.findOne(gameId);
+        let players = game.players;
         if (!players) {
             throw new Error('Game is not found');
         }
         let index = players.findIndex((p) => p.id == id);
         if (index >= 0) {
             players.splice(index, 1);
+            await this.gameService.update(gameId, game);
             return this.findAll(gameId);
             
         }
         throw new Error('Player is not found');
     }    
     async create(gameId: string, player: PlayerDto): Promise<PlayerDto> {
-        let players = this.gameService.findOne(gameId).players;
+        const game = await this.gameService.findOne(gameId);
+        let players = game.players;
         if (players) {
             let newPlayer : PlayerDto = {
                 ...player,
-                id: String(players.length),
                 totalSteps: 0,
             }
             players.push(newPlayer);
+            await this.gameService.update(gameId, game)
             return newPlayer;  
         }
         throw new Error('Game is not found');
