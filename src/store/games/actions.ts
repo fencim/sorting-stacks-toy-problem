@@ -20,7 +20,7 @@ const actions: ActionTree<GamesStates, StateInterface> = {
     });
   },
   async saveCurrentGame(context, game: Game) {
-    service.saveCurrentGame(game);
+    await service.saveCurrentGame(game);
   },
   async joinCurrentGame(context,  player: Player) {
     const game = await service.getCurrentGame() as Game;

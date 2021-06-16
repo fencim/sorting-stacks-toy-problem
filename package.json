@@ -6,7 +6,7 @@
   "author": "Lucman Abdulrachman <fencim@gmail.com>",
   "private": true,
   "scripts": {
-    "build": "quasar build",
+    "build": "quasar build -m pwa",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },

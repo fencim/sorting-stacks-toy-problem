@@ -109,7 +109,7 @@ export const service = {
         })  as GameDto;
     },
     async saveCurrentGame(game: Game) {
-        return await LocalBase.setItem('currentGame', game);
+        return await LocalBase.setItem('currentGame', game) as Game;
     },
     async joinGame(game: Game, player:Player) {
         if (game.id) {

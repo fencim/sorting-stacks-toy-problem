@@ -5,7 +5,7 @@
   },
   "hosting": {
     "site": "sorting-stacks-toy",
-    "public": "./dist/spa",
+    "public": "./dist/pwa",
     "ignore": [
       "firebase.json",
       "**/.*",
