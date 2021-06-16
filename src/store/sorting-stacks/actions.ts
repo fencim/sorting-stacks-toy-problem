@@ -1,3 +1,5 @@
+import { service } from 'src/services';
+import { GameDto } from 'src/services/rest-api';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { SortingStack } from './state';
@@ -52,11 +54,13 @@ const actions: ActionTree<SortingStack, StateInterface> = {
     
   },
 
-  bootstrap(context) {
+  async loadGame(context, payload: GameDto) {
     console.log('bootstrap');
+    const stacks = await service.getStacks(payload.id);
+    
     context.commit('loadGame', {
-      level: 0,
-      stacks: [[]]
+      level: payload.level,
+      stacks: stacks
     })
   }
 };

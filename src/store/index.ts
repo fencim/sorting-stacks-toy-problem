@@ -4,6 +4,8 @@ import { SortingStack } from './sorting-stacks/state';
 import sortingStack from './sorting-stacks';
 import { ProfileStates } from './profiles/state';
 import profiles from './profiles';
+import { GamesStates } from './games/state';
+import games from './games';
 
 // import example from './module-example';
 // import { ExampleStateInterface } from './module-example/state';
@@ -19,6 +21,7 @@ export interface StateInterface {
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   sortingStack: SortingStack;
   profiles: ProfileStates;
+  games: GamesStates;
 }
 
 export default store(function ({ Vue }) {
@@ -27,8 +30,8 @@ export default store(function ({ Vue }) {
   const Store = new Vuex.Store<StateInterface>({
     modules: {
       sortingStack,
-      profiles
-      // example
+      profiles,
+      games
     },
 
     // enable strict mode (adds overhead!)

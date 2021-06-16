@@ -1,3 +1,4 @@
+import { StackDto } from 'src/services/rest-api';
 import { MutationTree } from 'vuex';
 import { Player, SortingStack, Stack } from './state';
 
@@ -42,11 +43,11 @@ const mutation: MutationTree<SortingStack> = {
       }
     }    
   },
-  loadGame(state: SortingStack, payload: {level: number, stacks: number[][], players:Player[]}) {
+  loadGame(state: SortingStack, payload: {level: number, stacks: StackDto[], players:Player[]}) {
     state.gameSolved = false;
     state.level = payload.level;
     state.history = [];
-    state.stacks = payload.stacks.map(s => ({items: s, solved : false}));
+    state.stacks = payload.stacks.map(s => ({items: s.items, solved : false}));
     state.players = payload.players;
   },
   popOnStack(state: SortingStack,  payload: number) {

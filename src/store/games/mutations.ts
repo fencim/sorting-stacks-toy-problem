@@ -6,12 +6,13 @@ const mutation: MutationTree<GamesStates> = {
     state.currentGame = game;
     state.games.push(game);
   },
-  clearProfiles(state: GamesStates) {
-    state.games.splice(0, state.games.length);
-  },
-  addProfile(state: GamesStates, game: Game) {
+  addGame(state: GamesStates, game: Game) {
     state.games.push(game);
+  },
+  clearGames(state: GamesStates) {
+    state.games= [];
   }
+
 };
 
 export default mutation;

@@ -1,23 +1,23 @@
 import { service } from 'src/services';
-import { ProfileDto } from 'src/services/rest-api';
+import { GameDto, NewGameDto, ProfileDto } from 'src/services/rest-api';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { GamesStates } from './state';
 const actions: ActionTree<GamesStates, StateInterface> = {
   async bootstrap(context) {
-    const profile = await service.getCurrentProfile();
-    if (profile) {
-      context.commit('setCurrent', profile);
+    const game = await service.getCurrentGame();
+    if (game) {
+      context.commit('setCurrent', game);
     }
-    context.commit('clearProfiles');
-    const profiles = await service.getProfiles();
-    profiles && profiles.forEach((p) => {
-      context.commit('addProfile', p);
+    context.commit('clearGames');
+    const games = await service.getGames();
+    games && games.forEach((p) => {
+      context.commit('addGame', p);
     });
   },
-  async register(context, profile: ProfileDto) {
-    const updated = await service.updateCurrentProfile(profile);
-    if (updated) {
+  async postGame(context, game: NewGameDto) {
+    const updated = await service.postCurrentGame(game);
+    if (updated && updated.id) {
       context.commit('setCurrent', updated);
     }
   }
