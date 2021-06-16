@@ -8,6 +8,8 @@ export interface Profile {
   nickName?: string;
   age?: number;
   gender?: 'male' | 'female';
+  totalSteps?: number;
+  dateSolved?: Date;
 }
 export interface ProfileStates {
   currentProfile: Profile;

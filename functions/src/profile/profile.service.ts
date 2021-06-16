@@ -17,7 +17,7 @@ export class ProfileService {
     async findOne(id: string ): Promise<ProfileDto> {
         const record = await this.firestore.profiles().doc(id).get();
         if (record.exists) {
-            return record.data() as ProfileDto;
+            return ({...record.data(), id: record.id}) as ProfileDto;
         }
         throw "Record does not exist";
     }
@@ -28,7 +28,7 @@ export class ProfileService {
         if (record.exists) {
             const data = record.data();
             await doc.delete();
-            return data as ProfileDto;
+            return {...data, id: record.id} as ProfileDto;
         }
         throw "Record does not exist";
     }

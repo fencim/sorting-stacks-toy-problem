@@ -19,23 +19,31 @@
       </div>
      
     </div>
-    <q-btn class="newGameBtn" @click="newGame">New Game</q-btn>
+    
+    <div class="row">      
+      <q-btn class="newGameBtn col" @click="createNewGame">New Game</q-btn>
+      <q-btn class="newGameBtn col" v-if="currentGame" @click="leaveGame">Leave Game</q-btn>
+      <q-btn class="newGameBtn col" @click="postProgress" v-if="gameSolved">Post Result</q-btn>
+    </div>
     <div v-if="gameSolved" class="text-h3 text-center"> Game Solved</div>
   </q-page>
 </template>
 
 <script lang="ts">
+import { Game } from 'src/store/games/state';
 import { SortingStack } from 'src/store/sorting-stacks/state';
 import { Vue, Component } from 'vue-property-decorator';
 import { mapState, mapGetters, mapActions } from 'vuex';
 
 @Component({
     computed: {
-      ...mapState('sortingStack', ['stacks', 'activeItem', 'activeStack']),
-      ...mapGetters('sortingStack', ['gameSolved','difficultyLevel'])
+      ...mapState('sortingStack', ['stacks', 'activeItem', 'activeStack', 'history']),
+      ...mapGetters('sortingStack', ['gameSolved','difficultyLevel']),
+      ...mapState('games', ['currentGame'])
     },
     methods:{
-      ...mapActions('sortingStack', ['toggle', 'newGame'])
+      ...mapActions('sortingStack', ['toggle', 'newGame']),
+      ...mapActions('games', ['leaveCurrentGame', 'markSolved'])
     }
 })
 export default class PageIndex extends Vue {
@@ -45,9 +53,27 @@ export default class PageIndex extends Vue {
   activeItem!: number;
   gameSolved!: boolean;
   difficultyLevel!:number;
+  history!:any[];
+  //games
+  currentGame!:Game;
   //methods
   toggle!:(stack: number)=> void;
-  newGame!:(difficultyLevel: number)=> void;
+  newGame!:(difficultyLevel?: number)=> void;
+  //game
+  leaveCurrentGame!:()=> Promise<void>;
+  markSolved!:(stepCount:number) => Promise<void>;
+
+  async createNewGame() {
+    await this.leaveCurrentGame();
+    this.newGame();
+  }
+  async leaveGame() {
+    await this.leaveCurrentGame();
+  }
+  async postProgress() {
+    await this.markSolved(this.history.length);    
+    this.newGame();
+  }
   
 };
 </script>

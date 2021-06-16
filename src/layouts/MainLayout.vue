@@ -8,14 +8,16 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
+          @click="toggleDrawer"
         />
         <q-toolbar-title>
-          Sorting Stacks 
+          <q-btn to="/" flat>Sorting Stacks</q-btn>
+          <span v-if="currentGame">({{computeRatio(currentGame)}}):{{currentGame.level}} by {{ownerName(currentGame)}}</span>
         </q-toolbar-title>
         
-        <div>
-           <q-btn @click="postChallenge" v-if="(!currentGame || !(currentGame.id)) && (stacks && stacks.length)">Post Game</q-btn>
+        <div class="toolbarWrapper">
+           <q-btn @click="postChallenge" v-if="canPostGame">Post Game</q-btn>
+           <q-btn @click="saveCurrentGame(currentGame)" v-if="canSaveGame">Save Game</q-btn>
            <q-btn-dropdown
               split
               color="teal"
@@ -31,20 +33,24 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
-          <q-btn icon="undo" @click="undo(1)"></q-btn>
-          <q-btn icon="360" @click="reset"></q-btn>
-          <q-btn
+          
+            <q-btn icon="undo" @click="undo(1)"></q-btn>
+          
+            <q-btn icon="360" @click="reset"></q-btn>
+          
+            <q-btn
+              
+              round
+              to="register"
+              :icon="!(currentProfile && currentProfile.id)? 'person' : undefined"
+              text-color="white"
+              :label="getProfileInitials()"
+            >
             
-            round
-            to="register"
-            :icon="!(currentProfile && currentProfile.id)? 'person' : undefined"
-            text-color="white"
-            :label="getProfileInitials()"
-          >
-          <q-badge v-if="!(currentProfile && currentProfile.id)"  floating >
-              !
-            </q-badge>
-        </q-btn>
+            <q-badge v-if="!(currentProfile && currentProfile.id)"  floating  color="red">
+                !
+              </q-badge>
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -59,24 +65,48 @@
           header
           class="text-grey-8"
         >
-          Leader Board
+          Leader Board ({{profiles.length}})
         </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <div v-if="currentGame">
+         <q-item
+            v-for="player in profiles"
+            :key="player.id"
+            clickable
+          >
+            <q-item-section avatar>
+              <q-icon name="person" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{player.firstName}} {{player.lastName}}</q-item-label>
+              <q-item-label caption>{{player.nickName}} {{player.totalSteps}}</q-item-label>
+              <q-item-label caption> {{player.dateSolved && player.dateSolved.toDateString()+ 'T'+ player.dateSolved.toLocaleTimeString()}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+        </div>
         <q-item-label
           header
           class="text-grey-8"
         >
-          Games
+          Games ({{games.length}})
         </q-item-label>
+        
         <q-item
           v-for="game in games"
           :key="game.id"
+          clickable
+          @click="joinGame(game.id)"
         >
-          {{game.level}} by {{game.players && game.players[0].name}}</span>
+          <q-item-section avatar>
+            <q-icon :name="!gameHaveSolved(game) ? 'shield': 'check'" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{descGame(game)}}</q-item-label>
+            <q-item-label caption></q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-btn>Join</q-btn>
+          </q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
@@ -93,8 +123,8 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 
 import { Vue, Component } from 'vue-property-decorator';
 import { Profile } from 'src/store/profiles/state';
-import { Game } from 'src/store/games/state';
-import { GameDto, NewGameDto } from 'src/services/rest-api';
+import { Game, Player } from 'src/store/games/state';
+import { NewGameDto } from 'src/services/rest-api';
 import { Stack } from 'src/store/sorting-stacks/state';
 const linksData = [
    {
@@ -109,44 +139,106 @@ const linksData = [
   components: { EssentialLink },
   computed: {
     ...mapGetters('sortingStack', ['difficultyLevel']),
-    ...mapState('sortingStack', ['stacks']),
-    ...mapState('profiles', ['currentProfile']),
+    ...mapState('sortingStack', ['stacks', 'activeItem']),
+    ...mapState('profiles', ['currentProfile', 'profiles']),
     ...mapState('games', ['currentGame', 'games'])
   },
   methods: {
     ...mapActions('sortingStack', ['undo', 'reset', 'newGame', 'loadGame']),
     ...mapActions('profiles', {
-      bootstrapProfiles: 'bootstrap'
+      bootstrapProfiles: 'bootstrap',
+      listProfiles: 'listProfiles'
     }),
     ...mapActions('games', {
       bootstrapGames: 'bootstrap',
-      postGame: 'postGame'
+      postGame: 'postGame',
+      getGameInfo: 'getGameInfo',
+      saveCurrentGame: 'saveCurrentGame',
+      joinCurrentGame: 'joinCurrentGame',
+      listGames: 'listGames',
+      leaveCurrentGame: 'leaveCurrentGame'
     })
   }
 })
 export default class MainLayout extends Vue {
   leftDrawerOpen = false;
   essentialLinks = linksData;
+  //sorting
   difficultyLevel!:number;
   stacks!: Stack[];
-  games!: Game[];
-  currentProfile!: Profile;
-  currentGame!:Game;
-  undo!:(undo:number) => void;
-  bootstrapProfiles!:() => Promise<void>;
-  bootstrapGames!:() => Promise<void>;
-  postGame!:(game: NewGameDto) => Promise<void>;
-  loadGame!:(game: Game) => Promise<void>;
+  activeItem!: number;
   reset!:() => void;
   newGame!:(difficultyLevel: number)=> void;
-  async created() {
-    await this.bootstrapProfiles();
-    await this.bootstrapGames();
-    console.log('currentGame',this.currentGame);
-    if (this.currentGame) {
-      await this.loadGame(this.currentGame);
+  undo!:(undo:number) => void;
+  loadGame!:(game: Game) => Promise<void>;
+  //games
+  currentGame!:Game;
+  games!: Game[];
+  bootstrapGames!:() => Promise<void>;
+  postGame!:(game: NewGameDto) => Promise<void>;
+  saveCurrentGame!:(game: Game) => Promise<void>;
+  joinCurrentGame!:(player:Player)=> Promise<void>;
+  getGameInfo!:(gameId:string) => Promise<Game>;
+  listGames!:()=>void;
+  leaveCurrentGame!:()=> Promise<void>;
+  //profiles
+  currentProfile!: Profile;
+  profiles!: Profile[];
+  bootstrapProfiles!:() => Promise<void>;
+  listProfiles!:() => Promise<void>;
+  //internal getters
+  get canSaveGame() {
+    return this.currentGame && this.currentGame.id && !this.activeItem;
+  }
+  get canPostGame() {
+    return (this.currentProfile && this.currentProfile.id) && (!this.currentGame || !(this.currentGame.id)) && (this.stacks && this.stacks.length)
+      && !(this.currentGame && this.currentGame.players?.find(p => p.id == this.currentProfile.id));
+  }
+  //hooks
+  created() {
+    this.bootstrapProfiles().catch((e:string)=>console.log(e));
+    this.bootstrapGames().then(()=> {
+      if (this.currentGame && this.currentGame.id) {
+        this.loadGame(this.currentGame);
+      }
+    }).catch((e:string)=>console.log(e));;
+  }
+  //helper methods
+  toggleDrawer() {
+    this.leftDrawerOpen = !this.leftDrawerOpen;
+    this.listGames();
+    this.listProfiles();
+  }
+  gameHaveSolved(game:Game) {
+    return (this.currentProfile && game.players?.find(p => (p.solved && p.id == this.currentProfile.id)));
+  }
+  async createNewGame(level:number) {
+    await this.leaveCurrentGame();
+    this.newGame(level);
+  }
+  async joinGame(gameId?:string) {
+    this.leftDrawerOpen = false;
+    if (this.currentGame && gameId == this.currentGame.id) return;
+    if (gameId && this.currentProfile && this.currentProfile.id) {
+      const game = await this.getGameInfo(String(gameId));
+      await this.loadGame(game);
+      await this.joinCurrentGame({
+        name: this.currentProfile.nickName || "",
+        id: this.currentProfile.id,
+        solved: false,
+        totalSteps: 0
+      });
     }
-    
+  }
+  descGame(game:Game) {
+    return `${game.level-3} by ${this.ownerName(game)} (${this.computeRatio(game)})`;
+  }
+  ownerName(game:Game) {
+    return game.players?.find(p => p.name)?.name || '';
+  }
+  computeRatio(game:Game) {
+    return String(game.players?.filter(p => p.solved).length || 0) + '/' 
+      + String(game.players?.length || 0);
   }
   getProfileInitials() {
     if (this.currentProfile && this.currentProfile.id) {
@@ -165,10 +257,15 @@ export default class MainLayout extends Vue {
         solved: false,
         totalSteps: 0,
       }],
-      stacks: (this.stacks.map(s => ({items: s.items})) as any)  || []
+      stacks: (this.stacks.map(s => ({items: s.items})))  || []
     })
-
   }
 
 }
 </script>
+
+<style scoped>
+.toolbarWrapper > * {
+  margin-left: 5px;
+}
+</style>

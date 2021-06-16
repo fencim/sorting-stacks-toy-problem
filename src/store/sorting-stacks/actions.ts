@@ -1,6 +1,5 @@
-import { service } from 'src/services';
-import { GameDto } from 'src/services/rest-api';
 import { ActionTree } from 'vuex';
+import { Game } from '../games/state';
 import { StateInterface } from '../index';
 import { SortingStack } from './state';
 const actions: ActionTree<SortingStack, StateInterface> = {
@@ -48,19 +47,13 @@ const actions: ActionTree<SortingStack, StateInterface> = {
     if (typeof level != 'number' && context.state.gameSolved) {
       difficulty++;
     } 
-    context.commit('newGame', difficulty);
-    // console.log(context.state.level, context.state.stacks);
-    // const stacks = context.state.stacks;
-    
+    context.commit('newGame', difficulty);    
   },
 
-  async loadGame(context, payload: GameDto) {
-    console.log('bootstrap');
-    const stacks = await service.getStacks(payload.id);
-    
+  loadGame(context, payload: Game) {  
     context.commit('loadGame', {
       level: payload.level,
-      stacks: stacks
+      stacks: payload.stacks
     })
   }
 };

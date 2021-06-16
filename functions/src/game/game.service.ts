@@ -19,7 +19,7 @@ export class GameService {
         const doc = this.firestore.challenges().doc(id);
         const record = await doc.get();
         if (record.exists) {
-            doc.set(game);
+            await doc.update(game);
             return game as GameDto;
         }
         throw "Record does not exist";
@@ -33,6 +33,6 @@ export class GameService {
     }
     async findAll(): Promise<GameDto[]> {
         const list = await this.firestore.challenges().limit(20).get();
-        return list.docs.map(doc => doc.data()) as GameDto[];
+        return list.docs.map(doc => ({...doc.data(), id: doc.id})) as GameDto[];
     }
 }

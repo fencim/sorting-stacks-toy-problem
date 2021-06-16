@@ -53,8 +53,10 @@ export class PlayerService {
                 ...player,
                 totalSteps: 0,
             }
-            players.push(newPlayer);
-            await this.gameService.update(gameId, game)
+            if (!players.find(p => p.id == newPlayer.id)) {
+                players.push(newPlayer);
+                await this.gameService.update(gameId, game);
+            }
             return newPlayer;  
         }
         throw new Error('Game is not found');

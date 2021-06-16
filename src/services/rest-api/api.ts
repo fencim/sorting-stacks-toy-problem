@@ -33,6 +33,12 @@ export interface CreatePlayerDto {
      * @memberof CreatePlayerDto
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePlayerDto
+     */
+    id?: string;
 }
 /**
  * 
@@ -54,10 +60,10 @@ export interface GameDto {
     level: number;
     /**
      * 
-     * @type {PlayerDto}
+     * @type {Array<PlayerDto>}
      * @memberof GameDto
      */
-    players: PlayerDto;
+    players: Array<PlayerDto>;
 }
 /**
  * 

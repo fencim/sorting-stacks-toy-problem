@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-form
+    <q-form @load="bootstrap"
       @submit="submit" 
       :class="!$q.screen.lt.md ? 'q-pa-xl shadow-10' : 'q-pa-lg'"
     >
@@ -125,12 +125,13 @@ import { Profile } from 'src/store/profiles/state';
     ...mapState('profiles', ['currentProfile'])
   },
   methods: {
-    ...mapActions('profiles', ['register'])
+    ...mapActions('profiles', ['register', 'bootstrap'])
   }
 })
 export default class RegisterForm extends Vue {
   currentProfile!: Profile;
   register!:(profile:Profile) => Promise<void>;
+  bootstrap!:() => Promise<void>;
   profile: Profile = {};
   mounted() {
     this.profile = {...this.currentProfile};

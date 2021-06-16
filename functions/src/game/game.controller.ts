@@ -26,7 +26,7 @@ export class GameController {
     @Get()
     async findAll():Promise<GameDto[]> {
         return (await this.gameService.findAll()).map(g => {
-            return { ...g, players: undefined, stacks: undefined }
+            return { ...g, stacks: undefined }
         });
     }
 }

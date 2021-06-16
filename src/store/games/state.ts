@@ -6,7 +6,7 @@ export interface Player {
   totalSteps?: number;
   dateSolved?: Date; 
 }
-export type Stack = number []
+export type Stack = {items: number []}
 export interface Game {
   id?: string;
   level: number;

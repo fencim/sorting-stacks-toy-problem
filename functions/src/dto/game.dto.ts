@@ -8,7 +8,7 @@ export class GameDto implements Game {
     id?: string;
     @ApiProperty()
     level: number;
-    @ApiProperty({type:PlayerDto})
+    @ApiProperty({isArray:true, type:PlayerDto})
     players?: PlayerDto[];
     stacks? : StackDto[]
 }
