@@ -1,11 +1,11 @@
 {
   "functions": {
     "predeploy": "npm  run build",
-    "source": "functions/"
+    "source": "functions"
   },
   "hosting": {
     "site": "sorting-stacks-toy",
-    "public": "dist/spa",
+    "public": "./dist/spa",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -17,5 +17,22 @@
         "function": "restapi"
       }
     ]
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "database": {
+      "port": 9000
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    }
   }
 }
