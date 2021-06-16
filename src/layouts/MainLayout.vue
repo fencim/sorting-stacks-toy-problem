@@ -15,6 +15,7 @@
         </q-toolbar-title>
         
         <div>
+           <q-btn @click="postChallenge" v-if="(!currentGame || !(currentGame.id)) && (stacks && stacks.length)">Post Game</q-btn>
            <q-btn-dropdown
               split
               color="teal"
@@ -36,7 +37,7 @@
             
             round
             to="register"
-            :icon="!(currentProfile && currentProfile.id)? 'person' : ''"
+            :icon="!(currentProfile && currentProfile.id)? 'person' : undefined"
             text-color="white"
             :label="getProfileInitials()"
           >
@@ -65,6 +66,18 @@
           :key="link.title"
           v-bind="link"
         />
+        <q-item-label
+          header
+          class="text-grey-8"
+        >
+          Games
+        </q-item-label>
+        <q-item
+          v-for="game in games"
+          :key="game.id"
+        >
+          {{game.level}} by {{game.players && game.players[0].name}}</span>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -80,6 +93,9 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 
 import { Vue, Component } from 'vue-property-decorator';
 import { Profile } from 'src/store/profiles/state';
+import { Game } from 'src/store/games/state';
+import { GameDto, NewGameDto } from 'src/services/rest-api';
+import { Stack } from 'src/store/sorting-stacks/state';
 const linksData = [
    {
     title: 'Github',
@@ -93,12 +109,18 @@ const linksData = [
   components: { EssentialLink },
   computed: {
     ...mapGetters('sortingStack', ['difficultyLevel']),
-    ...mapState('profiles', ['currentProfile'])
+    ...mapState('sortingStack', ['stacks']),
+    ...mapState('profiles', ['currentProfile']),
+    ...mapState('games', ['currentGame', 'games'])
   },
   methods: {
-    ...mapActions('sortingStack', ['undo', 'reset', 'newGame']),
+    ...mapActions('sortingStack', ['undo', 'reset', 'newGame', 'loadGame']),
     ...mapActions('profiles', {
       bootstrapProfiles: 'bootstrap'
+    }),
+    ...mapActions('games', {
+      bootstrapGames: 'bootstrap',
+      postGame: 'postGame'
     })
   }
 })
@@ -106,13 +128,25 @@ export default class MainLayout extends Vue {
   leftDrawerOpen = false;
   essentialLinks = linksData;
   difficultyLevel!:number;
+  stacks!: Stack[];
+  games!: Game[];
   currentProfile!: Profile;
+  currentGame!:Game;
   undo!:(undo:number) => void;
   bootstrapProfiles!:() => Promise<void>;
+  bootstrapGames!:() => Promise<void>;
+  postGame!:(game: NewGameDto) => Promise<void>;
+  loadGame!:(game: Game) => Promise<void>;
   reset!:() => void;
   newGame!:(difficultyLevel: number)=> void;
   async created() {
     await this.bootstrapProfiles();
+    await this.bootstrapGames();
+    console.log('currentGame',this.currentGame);
+    if (this.currentGame) {
+      await this.loadGame(this.currentGame);
+    }
+    
   }
   getProfileInitials() {
     if (this.currentProfile && this.currentProfile.id) {
@@ -121,6 +155,19 @@ export default class MainLayout extends Vue {
       return (firstName[0] + lastName[0]).toUpperCase(); 
     } 
     return '';
+  }
+  async postChallenge() {
+    await this.postGame({
+      level: this.difficultyLevel,
+      players: [{
+        id: String(this.currentProfile.id),
+        name: String(this.currentProfile.nickName),
+        solved: false,
+        totalSteps: 0,
+      }],
+      stacks: (this.stacks.map(s => ({items: s.items})) as any)  || []
+    })
+
   }
 
 }

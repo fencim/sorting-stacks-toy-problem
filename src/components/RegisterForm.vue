@@ -140,7 +140,7 @@ export default class RegisterForm extends Vue {
       this.$q.notify({icon: 'error', message: e});
     }).finally(()=> {
       this.$router.push('/').catch((e:string) => {
-        this.$q.notify({icon: 'error', message: e});
+        this.$q.notify({icon: 'error', message: e})
       });
     });
     
