@@ -2,8 +2,10 @@
 import { DefaultApi, Configuration, ProfileDto, GameDto, NewGameDto, PlayerDto } from './rest-api';
 import { LocalBase } from './localbase';
 import { Game, Player } from 'src/store/games/state';
+const live = 'https://asia-northeast1-sorting-stacks-game.cloudfunctions.net/restapi';
+const dev = 'http://localhost:5001/sorting-stacks-game/asia-northeast1/restapi';
 const restConfig = new Configuration({
-  basePath: 'http://localhost:5001/sorting-stacks-game/asia-northeast1/restapi'
+  basePath: process.env.NODE_ENV == 'development' ? dev : live
 });
 
 const restApi = new DefaultApi(restConfig);
