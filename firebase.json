@@ -4,7 +4,7 @@
     "source": "functions"
   },
   "hosting": {
-    "site": "sorting-stacks-toy",
+    "site": "sorting-stacks-game",
     "public": "./dist/pwa",
     "ignore": [
       "firebase.json",
