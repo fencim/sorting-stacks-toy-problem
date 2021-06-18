@@ -18,7 +18,7 @@
         <div class="toolbarWrapper">
            <q-btn @click="postChallenge" v-if="canPostGame">Post Game</q-btn>
            <q-btn @click="saveCurrentGame(currentGame)" v-if="canSaveGame">Save Game
-             <q-badge floating  color="yellow">
+             <q-badge floating  color="teal">
                 {{history.length}}
               </q-badge>
            </q-btn>
