@@ -28,8 +28,10 @@ async function bootstrap(expressInstance:any) {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
   app.enableCors({
-    origin: ["https://sorting-stacks-game.web.app/"],
-    preflightContinue: false
+    origin: "*",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   });
   await app.init();
 }
