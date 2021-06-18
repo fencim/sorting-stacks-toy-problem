@@ -37,8 +37,6 @@ async function bootstrap(expressInstance:any) {
   app.useGlobalPipes(new ValidationPipe({ skipMissingProperties: true }));
   await app.init();
 }
+bootstrap(expressServer);
 
-export const restapi = functions.region('asia-northeast1').https.onRequest(async (request, response) => {
-    await bootstrap(expressServer);
-    expressServer(request, response);
-});
+export let restapi = functions.https.onRequest(expressServer);
