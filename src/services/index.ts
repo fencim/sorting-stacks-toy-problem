@@ -10,8 +10,7 @@ const restConfig = new Configuration({
   baseOptions: {
     headers: {
         'Access-Control-Allow-Origin': '*',
-    },
-    withCredentials: true
+    }
   }
 });
 const restApi = new DefaultApi(restConfig);
