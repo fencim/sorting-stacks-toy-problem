@@ -2,6 +2,7 @@
 import { DefaultApi, Configuration, ProfileDto, GameDto, NewGameDto, PlayerDto } from './rest-api';
 import { LocalBase } from './localbase';
 import { Game, Player } from 'src/store/games/state';
+
 const live = 'https://asia-northeast1-sorting-stacks-game.cloudfunctions.net/restapi';
 const dev = 'http://localhost:5001/sorting-stacks-game/asia-northeast1/restapi';
 const restConfig = new Configuration({
@@ -11,7 +12,9 @@ const restConfig = new Configuration({
 const restApi = new DefaultApi(restConfig);
 const profilesDb = new LocalBase('profiles');
 const gamesDb = new LocalBase('games');
-
+restApi.about().then((response) => {
+    console.log(response.data);
+})
 export const service = {
     //Profiles
     async getCurrentProfile(): Promise<ProfileDto | undefined> {

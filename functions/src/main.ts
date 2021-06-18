@@ -17,8 +17,11 @@ const expressServer = express();
 
 async function bootstrap(expressInstance:any) {
   const app = await NestFactory.create(SortingStackAppModule, new ExpressAdapter(expressInstance));
-  app.enableCors({origin: "*"});
+  app.enableCors({
+    origin: ["https://sorting-stacks-game.web.app/"]
+  });
   const config = new DocumentBuilder()
+    .addServer("https://asia-northeast1-sorting-stacks-game.cloudfunctions.net/restapi")
     .addServer("/sorting-stacks-game/asia-northeast1/restapi")
     .setTitle('Sorting Stack API')
     .setDescription('REST API for Sorting Stacks Game')

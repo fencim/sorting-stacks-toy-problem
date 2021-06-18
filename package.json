@@ -6,6 +6,7 @@
   "author": "Lucman Abdulrachman <fencim@gmail.com>",
   "private": true,
   "scripts": {
+    "start": "quasar dev",
     "build": "quasar build -m pwa",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
@@ -14,6 +15,7 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "firebase": "^8.6.7",
     "firebase-functions": "^3.14.1",
     "localbase": "^0.7.5",
     "lodash": "^4.17.21",
