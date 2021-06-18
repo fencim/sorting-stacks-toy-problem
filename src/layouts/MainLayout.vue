@@ -19,7 +19,7 @@
            <q-btn @click="postChallenge" v-if="canPostGame">Post Game</q-btn>
            <q-btn @click="saveCurrentGame(currentGame)" v-if="canSaveGame">Save Game
              <q-badge floating  color="yellow">
-                {{stacks.length}}
+                {{history.length}}
               </q-badge>
            </q-btn>
            <q-btn-dropdown
@@ -143,7 +143,7 @@ const linksData = [
   components: { EssentialLink },
   computed: {
     ...mapGetters('sortingStack', ['difficultyLevel']),
-    ...mapState('sortingStack', ['stacks', 'activeItem']),
+    ...mapState('sortingStack', ['stacks', 'activeItem', 'history']),
     ...mapState('profiles', ['currentProfile', 'profiles']),
     ...mapState('games', ['currentGame', 'games'])
   },
@@ -171,6 +171,7 @@ export default class MainLayout extends Vue {
   difficultyLevel!:number;
   stacks!: Stack[];
   activeItem!: number;
+  history!:any[];
   reset!:() => void;
   newGame!:(difficultyLevel: number)=> void;
   undo!:(undo:number) => void;
