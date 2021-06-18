@@ -12,7 +12,6 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { SortingStackAppModule } from './sorting-stack-app.module';
 import { ExpressAdapter } from "@nestjs/platform-express";
-import { ValidationPipe } from "@nestjs/common";
 
 const expressServer = express();
 
@@ -33,10 +32,10 @@ async function bootstrap(expressInstance:any) {
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     "credentials":true
   });
-  
-  app.useGlobalPipes(new ValidationPipe({ skipMissingProperties: true }));
   await app.init();
 }
-bootstrap(expressServer);
 
-export let restapi = functions.https.onRequest(expressServer);
+export const restapi = functions.region('asia-northeast1').https.onRequest(async (request, response) => {
+    await bootstrap(expressServer);
+    expressServer(request, response);
+});

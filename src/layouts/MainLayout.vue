@@ -179,7 +179,7 @@ export default class MainLayout extends Vue {
   saveCurrentGame!:(game: Game) => Promise<void>;
   joinCurrentGame!:(player:Player)=> Promise<void>;
   getGameInfo!:(gameId:string) => Promise<Game>;
-  listGames!:()=>void;
+  listGames!:()=>Promise<void>;
   leaveCurrentGame!:()=> Promise<void>;
   //profiles
   currentProfile!: Profile;
@@ -204,10 +204,10 @@ export default class MainLayout extends Vue {
     }).catch((e:string)=>console.log(e));;
   }
   //helper methods
-  toggleDrawer() {
+  async toggleDrawer() {
     this.leftDrawerOpen = !this.leftDrawerOpen;
-    this.listGames();
-    this.listProfiles();
+    await this.listGames();
+    await this.listProfiles();
   }
   gameHaveSolved(game:Game) {
     return (this.currentProfile && game.players?.find(p => (p.solved && p.id == this.currentProfile.id)));

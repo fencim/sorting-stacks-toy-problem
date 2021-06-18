@@ -2772,7 +2772,7 @@
         "affectsGlobalScope": false
       },
       "../src/main.ts": {
-        "version": "a89ccaa5d86723d131a5ea866ba370f1f6853dc79629de8354523b81f6ac3eb6",
+        "version": "ae4a31e2e4c95b92e5f4d33526b6dbcb999295960c850d6be444d010c8cfbdd1",
         "signature": "dd8b922133a21d2f4bdde10500824985acdce8bbde399db301c51689042880b4",
         "affectsGlobalScope": false
       },
@@ -2954,6 +2954,11 @@
       "../node_modules/@types/supertest/index.d.ts": {
         "version": "e57360b3f53ec41ed30cfb0eaed6e689be92bf311d7c25175a4e127f46158079",
         "signature": "e57360b3f53ec41ed30cfb0eaed6e689be92bf311d7c25175a4e127f46158079",
+        "affectsGlobalScope": false
+      },
+      "../node_modules/@types/validator/index.d.ts": {
+        "version": "f55bbbd6e8ea71ca6b38b53abced3a6d5030b16e1a7dbc3b3ea1b0170cad0295",
+        "signature": "f55bbbd6e8ea71ca6b38b53abced3a6d5030b16e1a7dbc3b3ea1b0170cad0295",
         "affectsGlobalScope": false
       },
       "../node_modules/@types/yargs-parser/index.d.ts": {
@@ -8981,6 +8986,7 @@
       "../node_modules/@types/stack-utils/index.d.ts",
       "../node_modules/@types/superagent/index.d.ts",
       "../node_modules/@types/supertest/index.d.ts",
+      "../node_modules/@types/validator/index.d.ts",
       "../node_modules/@types/yargs-parser/index.d.ts",
       "../node_modules/@types/yargs/index.d.ts",
       "../node_modules/abort-controller/dist/abort-controller.d.ts",
