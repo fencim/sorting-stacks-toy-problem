@@ -28,10 +28,12 @@ async function bootstrap(expressInstance:any) {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
   app.enableCors({
-    origin: "*",
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "origin":true,
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 200,
+    "credentials":true,
+    "allowedHeaders": "Content-Type, Accept,Authorization",
   });
   await app.init();
 }
