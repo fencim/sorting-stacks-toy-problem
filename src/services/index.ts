@@ -151,7 +151,7 @@ export const service = {
     async getGames() {
         try {
             const response = await restApi.listGames();
-            if (response.statusText == 'OK') {
+            if (response.statusText == 'OK' || response.status == 200) {
                 await Promise.all((response.data).map(async (g) => {
                     return (await gamesDb.setItem(g.id, g) as GameDto)
                 }));
