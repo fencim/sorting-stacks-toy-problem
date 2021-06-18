@@ -17,7 +17,11 @@
         
         <div class="toolbarWrapper">
            <q-btn @click="postChallenge" v-if="canPostGame">Post Game</q-btn>
-           <q-btn @click="saveCurrentGame(currentGame)" v-if="canSaveGame">Save Game</q-btn>
+           <q-btn @click="saveCurrentGame(currentGame)" v-if="canSaveGame">Save Game
+             <q-badge floating  color="yellow">
+                {{stacks.length}}
+              </q-badge>
+           </q-btn>
            <q-btn-dropdown
               split
               color="teal"
