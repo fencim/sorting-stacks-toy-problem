@@ -6,9 +6,13 @@ import { Game, Player } from 'src/store/games/state';
 const live = 'https://asia-northeast1-sorting-stacks-game.cloudfunctions.net/restapi';
 const dev = 'http://localhost:5001/sorting-stacks-game/asia-northeast1/restapi';
 const restConfig = new Configuration({
-  basePath: process.env.NODE_ENV == 'development' ? dev : live
+  basePath: process.env.NODE_ENV == 'development' ? dev : live,
+  baseOptions: {
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+    },
+  }
 });
-
 const restApi = new DefaultApi(restConfig);
 const profilesDb = new LocalBase('profiles');
 const gamesDb = new LocalBase('games');
