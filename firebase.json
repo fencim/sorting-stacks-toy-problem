@@ -16,7 +16,14 @@
         "source": "**",
         "function": "restapi"
       }
-    ]
+    ],
+    "headers": [ {
+      "source": "**",
+      "headers": [ {
+        "key": "Access-Control-Allow-Origin",
+        "value": "*"
+      } ]
+    } ]
   },
   "emulators": {
     "functions": {
